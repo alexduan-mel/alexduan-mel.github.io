@@ -1,32 +1,32 @@
 baseURL: "https://alexduan-mel.github.io/"
-title: "Alex Duan - Learning Blog"
-theme: "LoveIt"
+title: "Alex Duan"
+theme: "PaperMod"
 languageCode: "en"
 defaultContentLanguage: "en"
-
-languages:
-  en:
-    languageName: "English"
-    weight: 1
+pagination:
+  pagerSize: 10
+enableRobotsTXT: true
 
 menu:
   main:
-    - identifier: posts
-      name: Posts
+    - name: Posts
       url: /posts/
       weight: 1
-    - identifier: notes
-      name: Notes
-      url: /notes/
-      weight: 2
-    - identifier: about
-      name: About
+    - name: About
       url: /about/
-      weight: 3
+      weight: 2
 
 params:
-  defaultTheme: "light"
-  description: "Personal learning notes and experiments."
-  home:
-    profile:
-      enable: false
+  env: production
+  title: "Alex Duan"
+  description: "Personal site and learning notes."
+  author: "Alex Duan"
+  homeInfoParams:
+    Title: "Hi, I'm Alex"
+    Content: "Personal site and learning notes."
+  ShowReadingTime: true
+  ShowShareButtons: false
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: false
+  ShowCodeCopyButtons: true
+  mainSections: ["posts"]
