@@ -12,9 +12,12 @@ menu:
     - name: Posts
       url: /posts/
       weight: 1
+    - name: System Design
+      url: /system-design/
+      weight: 2
     - name: About
       url: /about/
-      weight: 2
+      weight: 3
 
 params:
   env: production
@@ -29,4 +32,4 @@ params:
   ShowPostNavLinks: true
   ShowBreadCrumbs: false
   ShowCodeCopyButtons: true
-  mainSections: ["posts"]
+  mainSections: ["posts", "system-design"]
