@@ -15,9 +15,12 @@ menu:
     - name: System Design
       url: /system-design/
       weight: 2
+    - name: LeetCode
+      url: /tags/leetcode/
+      weight: 3
     - name: About
       url: /about/
-      weight: 3
+      weight: 4
 
 params:
   env: production
