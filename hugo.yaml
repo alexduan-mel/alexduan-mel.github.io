@@ -38,4 +38,11 @@ params:
   ShowPostNavLinks: true
   ShowBreadCrumbs: false
   ShowCodeCopyButtons: true
+  ShowToc: true
+  TocOpen: true
   mainSections: ["posts", "system-design"]
+
+markup:
+  highlight:
+    lineNos: true
+    noClasses: false
