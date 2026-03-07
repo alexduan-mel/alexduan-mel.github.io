@@ -12,6 +12,7 @@ tags: ["leetcode", "algorithms"]
 
 ### 1.1 Topological Sort
 Use **indegrees** to repeatedly take nodes with **0 prerequisites**. If you cannot take all nodes, a **cycle** exists. Returns a valid order for a **DAG**.
+Reference: [\[1\]](#ref-1)
 ```python
 def topologicalSort(n: int, edges: List[List[int]]) -> List[int]:
     g = [[] for _ in range(n)]
@@ -38,6 +39,7 @@ def topologicalSort(n: int, edges: List[List[int]]) -> List[int]:
 
 ### 1.2 Three-Color DFS
 Use colors: **0 = unvisited**, **1 = visiting**, **2 = done**. A **back-edge** to a visiting node means a **cycle**. If no cycle, you can reverse **postorder** for a topo order.
+Reference: [\[1\]](#ref-1)
 ```python
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -80,6 +82,7 @@ class Solution:
 
 ### 2.1 Template
 Use **parent** pointers with **union by size** and **path compression** to maintain dynamic connectivity. Supports fast **find**, **union**, and **connected** checks (near O(1) amortized).
+Reference: [\[2\]](#ref-2)
 
 ```python
 class UnionFind:
@@ -133,5 +136,9 @@ class UnionFind:
 - [765. Couples Holding Hands](https://leetcode.com/problems/couples-holding-hands/)
 
 ## Reference
-1. 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss. https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/
-2. 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss. https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/
+[1]: https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/
+[2]: https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/
+
+## Reference
+1. <a id="ref-1"></a> [1] 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
+2. <a id="ref-2"></a> [2] 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
