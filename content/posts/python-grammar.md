@@ -23,3 +23,25 @@ res[key].append(s)
 
 **Pitfall**
 - Don’t use a list or other mutable type as a dictionary key.
+
+---
+
+## Strings
+**Key idea**
+- Strings are **immutable**; methods return a new string.
+
+**Common pattern**
+- Normalize case with `lower()` / `upper()` before comparison.
+- Validate characters with `isalpha()` / `isdigit()` / `isalnum()`.
+
+```python
+s = "Hello123"
+print(s.lower())      # "hello123"
+print(s.upper())      # "HELLO123"
+print(s.isalpha())    # False (contains digits)
+print(s.isdigit())    # False (contains letters)
+print(s.isalnum())    # True (letters + digits)
+```
+
+**Pitfall**
+- `isalpha()` and `isdigit()` return `False` if the string is empty.
