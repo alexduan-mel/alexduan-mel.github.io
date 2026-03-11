@@ -46,3 +46,6 @@ markup:
   highlight:
     lineNos: true
     noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
