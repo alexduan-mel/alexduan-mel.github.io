@@ -222,8 +222,8 @@ Reference: [\[5\]](#ref-5)
 [4]: https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/
 [5]: https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/
 
-1. <a id="ref-1"></a> [1] 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
-2. <a id="ref-2"></a> [2] 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
-3. <a id="ref-3"></a> [3] 灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.
-4. <a id="ref-4"></a> [4] 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
-5. <a id="ref-5"></a> [5] 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
+1. <a id="ref-1"></a> 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
+2. <a id="ref-2"></a> 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
+3. <a id="ref-3"></a> 灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.
+4. <a id="ref-4"></a> 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
+5. <a id="ref-5"></a> 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
