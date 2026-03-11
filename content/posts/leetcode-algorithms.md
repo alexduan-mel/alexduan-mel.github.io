@@ -135,10 +135,95 @@ class UnionFind:
 - [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
 - [765. Couples Holding Hands](https://leetcode.com/problems/couples-holding-hands/)
 
+# Sliding Window
+
+## 1. Fixed-Size Window
+
+### 1.1 Template
+Maintain a window of **fixed length k**. Each step: add the right element, update the answer when the window is formed, then remove the left element.  
+Reference: [\[3\]](#ref-3)
+
+```python
+class Solution:
+    def maxVowels(self, s: str, k: int) -> int:
+        ans = vowel = 0
+        for i, c in enumerate(s):  # enumerate right boundary i
+            # 1) Right boundary enters the window
+            if c in "aeiou":
+                vowel += 1
+
+            left = i - k + 1  # left boundary
+            if left < 0:  # window size < k, not formed yet
+                continue
+
+            # 2) Update answer
+            ans = max(ans, vowel)
+            if ans == k:  # already at theoretical max
+                break  # no need to continue
+
+            # 3) Left boundary leaves the window
+            if s[left] in "aeiou":
+                vowel -= 1
+        return ans
+
+```
+
+### 1.2 Applicable Scenarios
+- **Max/min/count** over all length‑k substrings.
+- **Rolling** statistics with a fixed window size.
+
+### 1.3 Representative Problems
+- [1456. Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)
+- [643. Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/)
+- [438. Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/)
+- [567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
+- [1343. Number of Sub-arrays of Size K and Average Greater Than or Equal to Threshold](https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/)
+
+## 2. Variable-Size Window
+
+### 2.1 Template
+Expand the right boundary, and **shrink from the left** while the constraint is violated. Track the best window during the process.  
+Reference: [\[4\]](#ref-4)
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        ans = left = 0
+        window = set()  # characters between left and right
+        for right, c in enumerate(s):
+            # If c is already in the window, shrink until it is removed
+            while c in window:
+                window.remove(s[left])
+                left += 1  # shrink window
+            window.add(c)  # add c
+            ans = max(ans, right - left + 1)  # update best length
+        return ans
+```
+
+### 2.2 Applicable Scenarios
+- **Longest/shortest** subarray or substring under a constraint.
+- **Frequency‑based** constraints (distinct counts, character limits, etc.).
+
+### 2.3 Exact‑K Trick
+For “**exactly k**” constraints, compute `solve(k) - solve(k + 1)` where `solve(x)` counts **at most x**.  
+Reference: [\[5\]](#ref-5)
+
+### 2.4 Representative Problems
+- [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+- [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
+- [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
+- [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
+- [992. Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/)
+
 ## Reference
 [1]: https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/
 [2]: https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/
+[3]: https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/
+[4]: https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/
+[5]: https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/
 
-## Reference
 1. <a id="ref-1"></a> [1] 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
 2. <a id="ref-2"></a> [2] 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
+3. <a id="ref-3"></a> [3] 灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.
+4. <a id="ref-4"></a> [4] 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
+5. <a id="ref-5"></a> [5] 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
