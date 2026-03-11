@@ -2,6 +2,8 @@
 
 Personal site powered by Hugo and PaperMod.
 
+Homepage: https://alexduan-mel.github.io/
+
 ## Local development
 
 ```bash
