@@ -215,15 +215,57 @@ Reference: [\[5\]](#ref-5)
 - [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 - [992. Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/)
 
+# Monotonic Queue
+
+## 1. Template
+Maintain a **deque of indices** whose values are **monotonic** (e.g., decreasing for max). Pop from the back to restore order, and pop from the front when indices fall out of the window.  
+Reference: [\[6\]](#ref-6)
+
+```python
+from collections import deque
+
+def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
+    dq = deque()  # indices, values decreasing
+    ans = []
+    for i, x in enumerate(nums):
+        # Remove smaller values from the back
+        while dq and nums[dq[-1]] <= x:
+            dq.pop()
+        dq.append(i)
+
+        # Remove out-of-window indices from the front
+        if dq[0] <= i - k:
+            dq.popleft()
+
+        # Window formed
+        if i >= k - 1:
+            ans.append(nums[dq[0]])
+    return ans
+```
+
+## 2. Applicable Scenarios
+- **Sliding window max/min** with O(n) total time.
+- **Range max/min** over a moving window.
+- **DP optimization** where transitions use a sliding max/min.
+
+## 3. Representative Problems
+- [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+- [1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/)
+- [862. Shortest Subarray with Sum at Least K](https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/)
+- [1696. Jump Game VI](https://leetcode.com/problems/jump-game-vi/)
+- [1425. Constrained Subsequence Sum](https://leetcode.com/problems/constrained-subsequence-sum/)
+
 ## Reference
 [1]: https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/
 [2]: https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/
 [3]: https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/
 [4]: https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/
 [5]: https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/
+[6]: https://leetcode.com/problems/sliding-window-maximum/
 
 1. <a id="ref-1"></a> 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
 2. <a id="ref-2"></a> 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
 3. <a id="ref-3"></a> 灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.
 4. <a id="ref-4"></a> 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
 5. <a id="ref-5"></a> 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
+6. <a id="ref-6"></a> LeetCode. (n.d.). Sliding Window Maximum. LeetCode.
