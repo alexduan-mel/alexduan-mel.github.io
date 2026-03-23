@@ -215,6 +215,51 @@ Reference: [\[5\]](#ref-5)
 - [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 - [992. Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/)
 
+# Binary Search
+
+## 1. Template (First True / Lower Bound)
+Find the **first index** where a **monotonic predicate** becomes true. Use `[lo, hi)` bounds to avoid off‑by‑one errors.  
+Reference: [\[7\]](#ref-7)
+
+```python
+def lower_bound(lo: int, hi: int, ok) -> int:
+    # Find first index in [lo, hi) that satisfies ok(i)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if ok(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+```
+
+## 2. Binary Search on Answer
+When the answer is numeric and **feasibility is monotonic**, search the smallest feasible value.
+
+```python
+def min_feasible(lo: int, hi: int, feasible) -> int:
+    # Answer in [lo, hi], feasible(x) is monotonic
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if feasible(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+```
+
+## 3. Applicable Scenarios
+- **First/last occurrence** in a sorted array.
+- **Minimum/maximum** feasible value with monotonic constraints.
+- **Rotated** or **partially ordered** arrays (with slight adaptations).
+
+## 4. Representative Problems
+- [704. Binary Search](https://leetcode.com/problems/binary-search/)
+- [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+- [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+- [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/)
+- [1011. Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/)
+
 # Monotonic Queue
 
 ## 1. Template
@@ -262,6 +307,7 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 [4]: https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/
 [5]: https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/
 [6]: https://leetcode.com/problems/sliding-window-maximum/
+[7]: https://cp-algorithms.com/num_methods/binary_search.html
 
 1. <a id="ref-1"></a> 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
 2. <a id="ref-2"></a> 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
@@ -269,3 +315,4 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 4. <a id="ref-4"></a> 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
 5. <a id="ref-5"></a> 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
 6. <a id="ref-6"></a> LeetCode. (n.d.). Sliding Window Maximum. LeetCode.
+7. <a id="ref-7"></a> CP-Algorithms. (n.d.). Binary Search. CP-Algorithms.
