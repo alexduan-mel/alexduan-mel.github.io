@@ -23,7 +23,7 @@
     <div class="post-meta">
       {{- partial "post_meta.html" . -}}
       {{- if .Lastmod }}
-      <span>&nbsp;·&nbsp;</span><span>Last updated: {{ .Lastmod.Format "2006-01-02" }}</span>
+      <span>&nbsp;·&nbsp;</span><span>Last updated: {{ .Lastmod | time.Format (default ":date_long" site.Params.DateFormat) }}</span>
       {{- end }}
       {{- partial "translation_list.html" . -}}
       {{- partial "edit_post.html" . -}}
