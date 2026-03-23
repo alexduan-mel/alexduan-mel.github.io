@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Python Grammar | Alex Duan</title>
+<meta name="keywords" content="python, grammar">
+<meta name="description" content="Concise notes on Python grammar and syntax.">
+<meta name="author" content="Alex Duan">
+<link rel="canonical" href="http://localhost:13131/posts/python-grammar/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b4870e4d51de795b32db3fd6c88455edf0d5d90149799af7a2e2359ee3a4d42f.css" integrity="sha256-tIcOTVHeeVsy2z/WyIRV7fDV2QFJeZr3ouI1nuOk1C8=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:13131/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:13131/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:13131/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:13131/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:13131/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:13131/posts/python-grammar/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:13131/posts/python-grammar/">
+  <meta property="og:site_name" content="Alex Duan">
+  <meta property="og:title" content="Python Grammar">
+  <meta property="og:description" content="Concise notes on Python grammar and syntax.">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-08T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-03-21T23:32:58+11:00">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Grammar">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python Grammar">
+<meta name="twitter:description" content="Concise notes on Python grammar and syntax.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:13131/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Python Grammar",
+      "item": "http://localhost:13131/posts/python-grammar/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Python Grammar",
+  "name": "Python Grammar",
+  "description": "Concise notes on Python grammar and syntax.",
+  "keywords": [
+    "python", "grammar"
+  ],
+  "articleBody": "Tuples as Dictionary Keys Key idea\nDictionary keys must be hashable (immutable). Lists are mutable → not hashable. Tuples are immutable → hashable. Common pattern\nUse a tuple as a stable fingerprint (e.g., Group Anagrams). Convert tuple to list when you need mutability. 1 2 3 4 5 6 count = [1, 0, 3] # List: unhashable (error if used as key) key = tuple(count) # Tuple: hashable (safe as dict key) res[key].append(s) t = (1, 2, 3) lst = list(t) # Tuple -\u003e list for updates Pitfall\nDon’t use a list or other mutable type as a dictionary key. Strings Key idea\nStrings are immutable; methods return a new string. Common pattern\nNormalize case with lower() / upper() before comparison. Validate characters with isalpha() / isdigit() / isalnum(). 1 2 3 4 5 6 s = \"Hello123\" print(s.lower()) # \"hello123\" print(s.upper()) # \"HELLO123\" print(s.isalpha()) # False (contains digits) print(s.isdigit()) # False (contains letters) print(s.isalnum()) # True (letters + digits) Pitfall\nisalpha() and isdigit() return False if the string is empty. Collections (Common Imports) Key idea\nMost OA environments (e.g., HackerRank) need explicit imports. Common pattern\nStart with the usual collections and heapq tools: 1 2 from collections import defaultdict, Counter, deque from heapq import heappush, heappop Quick reference\ncollections.defaultdict — dict with default factory collections.Counter — frequency counter collections.deque — fast queue/stack heapq — priority queue (min-heap) Built-ins (no import)\ndict, list, set, tuple Easy way to remember (OA)\nIf you need counts or queues, import collections. If you need a priority queue, import heapq. Common Methods (LeetCode) List\nMethod Use append(x) push to end pop() / pop(i) remove end / index extend(iterable) add many insert(i, x) insert at index remove(x) remove first match sort() / reverse() in-place order Set\nMethod Use add(x) insert remove(x) / discard(x) delete (error vs no error) pop() remove arbitrary update(iterable) add many intersection(...) common items union(...) all items difference(...) subtract items Dict / defaultdict\nMethod Use get(k, default) safe lookup setdefault(k, default) init if missing pop(k) / popitem() remove update(other) merge keys() / values() / items() iterate Deque\nMethod Use append(x) / appendleft(x) push right / left pop() / popleft() pop right / left extend(iterable) / extendleft(iterable) add many rotate(k) shift positions Stack (list or deque)\nMethod Use append(x) push pop() pop ",
+  "wordCount" : "379",
+  "inLanguage": "en",
+  "datePublished": "2026-03-08T00:00:00Z",
+  "dateModified": "2026-03-21T23:32:58+11:00",
+  "author":{
+    "@type": "Person",
+    "name": "Alex Duan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:13131/posts/python-grammar/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Alex Duan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:13131/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:13131/" accesskey="h" title="Alex Duan (Alt + H)">Alex Duan</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:13131/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:13131/system-design/" title="System Design">
+                    <span>System Design</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:13131/tags/leetcode/" title="LeetCode">
+                    <span>LeetCode</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:13131/tags/nlp/" title="NLP">
+                    <span>NLP</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:13131/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Python Grammar
+    </h1>
+    <div class="post-meta"><span title='2026-03-08 00:00:00 +0000 UTC'>March 8, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Alex Duan</span>
+      <span>&nbsp;·&nbsp;</span><span>Last updated: 2026-03-21</span>
+
+</div>
+  </header> <div class="toc">
+    <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#tuples-as-dictionary-keys" aria-label="Tuples as Dictionary Keys">Tuples as Dictionary Keys</a></li>
+                <li>
+                    <a href="#strings" aria-label="Strings">Strings</a></li>
+                <li>
+                    <a href="#collections-common-imports" aria-label="Collections (Common Imports)">Collections (Common Imports)</a></li>
+                <li>
+                    <a href="#common-methods-leetcode" aria-label="Common Methods (LeetCode)">Common Methods (LeetCode)</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="tuples-as-dictionary-keys">Tuples as Dictionary Keys<a hidden class="anchor" aria-hidden="true" href="#tuples-as-dictionary-keys">#</a></h2>
+<p><strong>Key idea</strong></p>
+<ul>
+<li>Dictionary keys must be <strong>hashable</strong> (immutable).</li>
+<li>Lists are <strong>mutable</strong> → not hashable.</li>
+<li>Tuples are <strong>immutable</strong> → hashable.</li>
+</ul>
+<p><strong>Common pattern</strong></p>
+<ul>
+<li>Use a tuple as a stable <strong>fingerprint</strong> (e.g., Group Anagrams).</li>
+<li>Convert tuple to list when you need <strong>mutability</strong>.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>    <span class="c1"># List: unhashable (error if used as key)</span>
+</span></span><span class="line"><span class="cl"><span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>   <span class="c1"># Tuple: hashable (safe as dict key)</span>
+</span></span><span class="line"><span class="cl"><span class="n">res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>        <span class="c1"># Tuple -&gt; list for updates</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Pitfall</strong></p>
+<ul>
+<li>Don’t use a list or other mutable type as a dictionary key.</li>
+</ul>
+<hr>
+<h2 id="strings">Strings<a hidden class="anchor" aria-hidden="true" href="#strings">#</a></h2>
+<p><strong>Key idea</strong></p>
+<ul>
+<li>Strings are <strong>immutable</strong>; methods return a new string.</li>
+</ul>
+<p><strong>Common pattern</strong></p>
+<ul>
+<li>Normalize case with <code>lower()</code> / <code>upper()</code> before comparison.</li>
+<li>Validate characters with <code>isalpha()</code> / <code>isdigit()</code> / <code>isalnum()</code>.</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">s</span> <span class="o">=</span> <span class="s2">&#34;Hello123&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>      <span class="c1"># &#34;hello123&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>      <span class="c1"># &#34;HELLO123&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">isalpha</span><span class="p">())</span>    <span class="c1"># False (contains digits)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>    <span class="c1"># False (contains letters)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">isalnum</span><span class="p">())</span>    <span class="c1"># True (letters + digits)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Pitfall</strong></p>
+<ul>
+<li><code>isalpha()</code> and <code>isdigit()</code> return <code>False</code> if the string is empty.</li>
+</ul>
+<hr>
+<h2 id="collections-common-imports">Collections (Common Imports)<a hidden class="anchor" aria-hidden="true" href="#collections-common-imports">#</a></h2>
+<p><strong>Key idea</strong></p>
+<ul>
+<li>Most OA environments (e.g., HackerRank) need <strong>explicit imports</strong>.</li>
+</ul>
+<p><strong>Common pattern</strong></p>
+<ul>
+<li>Start with the usual <code>collections</code> and <code>heapq</code> tools:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">deque</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">heapq</span> <span class="kn">import</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappop</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>Quick reference</strong></p>
+<ul>
+<li><code>collections.defaultdict</code> — dict with default factory</li>
+<li><code>collections.Counter</code> — frequency counter</li>
+<li><code>collections.deque</code> — fast queue/stack</li>
+<li><code>heapq</code> — priority queue (min-heap)</li>
+</ul>
+<p><strong>Built-ins (no import)</strong></p>
+<ul>
+<li><code>dict</code>, <code>list</code>, <code>set</code>, <code>tuple</code></li>
+</ul>
+<p><strong>Easy way to remember (OA)</strong></p>
+<ul>
+<li>If you need <strong>counts</strong> or <strong>queues</strong>, import <code>collections</code>.</li>
+<li>If you need a <strong>priority queue</strong>, import <code>heapq</code>.</li>
+</ul>
+<hr>
+<h2 id="common-methods-leetcode">Common Methods (LeetCode)<a hidden class="anchor" aria-hidden="true" href="#common-methods-leetcode">#</a></h2>
+<p><strong>List</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>append(x)</code></td>
+          <td>push to end</td>
+      </tr>
+      <tr>
+          <td><code>pop()</code> / <code>pop(i)</code></td>
+          <td>remove end / index</td>
+      </tr>
+      <tr>
+          <td><code>extend(iterable)</code></td>
+          <td>add many</td>
+      </tr>
+      <tr>
+          <td><code>insert(i, x)</code></td>
+          <td>insert at index</td>
+      </tr>
+      <tr>
+          <td><code>remove(x)</code></td>
+          <td>remove first match</td>
+      </tr>
+      <tr>
+          <td><code>sort()</code> / <code>reverse()</code></td>
+          <td>in-place order</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Set</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>add(x)</code></td>
+          <td>insert</td>
+      </tr>
+      <tr>
+          <td><code>remove(x)</code> / <code>discard(x)</code></td>
+          <td>delete (error vs no error)</td>
+      </tr>
+      <tr>
+          <td><code>pop()</code></td>
+          <td>remove arbitrary</td>
+      </tr>
+      <tr>
+          <td><code>update(iterable)</code></td>
+          <td>add many</td>
+      </tr>
+      <tr>
+          <td><code>intersection(...)</code></td>
+          <td>common items</td>
+      </tr>
+      <tr>
+          <td><code>union(...)</code></td>
+          <td>all items</td>
+      </tr>
+      <tr>
+          <td><code>difference(...)</code></td>
+          <td>subtract items</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Dict / defaultdict</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>get(k, default)</code></td>
+          <td>safe lookup</td>
+      </tr>
+      <tr>
+          <td><code>setdefault(k, default)</code></td>
+          <td>init if missing</td>
+      </tr>
+      <tr>
+          <td><code>pop(k)</code> / <code>popitem()</code></td>
+          <td>remove</td>
+      </tr>
+      <tr>
+          <td><code>update(other)</code></td>
+          <td>merge</td>
+      </tr>
+      <tr>
+          <td><code>keys()</code> / <code>values()</code> / <code>items()</code></td>
+          <td>iterate</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Deque</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>append(x)</code> / <code>appendleft(x)</code></td>
+          <td>push right / left</td>
+      </tr>
+      <tr>
+          <td><code>pop()</code> / <code>popleft()</code></td>
+          <td>pop right / left</td>
+      </tr>
+      <tr>
+          <td><code>extend(iterable)</code> / <code>extendleft(iterable)</code></td>
+          <td>add many</td>
+      </tr>
+      <tr>
+          <td><code>rotate(k)</code></td>
+          <td>shift positions</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Stack (list or deque)</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>append(x)</code></td>
+          <td>push</td>
+      </tr>
+      <tr>
+          <td><code>pop()</code></td>
+          <td>pop</td>
+      </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:13131/tags/python/">Python</a></li>
+      <li><a href="http://localhost:13131/tags/grammar/">Grammar</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:13131/posts/interview-words/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>Interview Words</span>
+  </a>
+  <a class="next" href="http://localhost:13131/posts/stanford-cs224n-notes/">
+    <span class="title">Next »</span>
+    <br>
+    <span>Stanford CS224N Notes</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:13131/">Alex Duan</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
