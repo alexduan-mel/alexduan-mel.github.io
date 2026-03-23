@@ -6,6 +6,7 @@ defaultContentLanguage: "en"
 pagination:
   pagerSize: 10
 enableRobotsTXT: true
+enableGitInfo: true
 
 menu:
   main:
@@ -49,3 +50,10 @@ markup:
   goldmark:
     renderer:
       unsafe: true
+
+frontmatter:
+  lastmod:
+    - lastmod
+    - :git
+    - date
+    - publishDate
