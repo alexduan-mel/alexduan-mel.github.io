@@ -212,6 +212,41 @@ x = x & ~mask
 
 ---
 
+## Adjacent 1s Check
+**Key idea**
+- `(mask & (mask >> 1))` detects if there are **adjacent set bits**.
+
+```python
+has_adjacent = (mask & (mask >> 1)) != 0
+```
+
+**Use scenarios**
+- Validate bitmasks with **no adjacent 1s** (e.g., independent sets).
+- Speed up DP constraints by early pruning.
+
+---
+
+## Toggle Bits by Mask
+**Key idea**
+- To invert only the lowest **n bits**, use `x ^ ((1 << n) - 1)`.
+
+```python
+n = 5
+x = 0b10110
+inv = x ^ ((1 << n) - 1)  # 0b01001
+
+# Only lowest n bits are inverted
+n = 3
+x = 0b10110
+inv = x ^ ((1 << n) - 1)  # 0b10001
+```
+
+**Use scenarios**
+- Invert a fixed-width bitmask (e.g., complementary subset in n bits).
+- Flip a subset of flags to model state transitions.
+
+---
+
 ## Bitwise AND/OR Range (Quick Bounds)
 **Key idea**
 - Range AND decreases or stays the same as range grows.
