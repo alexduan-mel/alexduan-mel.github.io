@@ -30,6 +30,26 @@ lst = list(t)        # Tuple -> list for updates
 
 ---
 
+## divmod
+**Key idea**
+- `divmod(a, b)` returns `(a // b, a % b)` in one step.
+
+**Common pattern**
+- Use when you need **both** quotient and remainder (base conversion, pagination, grouping).
+
+```python
+q, r = divmod(17, 5)  # q = 3, r = 2
+```
+
+**Import**
+- Built-in; no import needed.
+- (Rare) `from builtins import divmod`
+
+**Pitfall**
+- For negative numbers, Python's `//` and `%` follow floor division rules.
+
+---
+
 ## Strings
 **Key idea**
 - Strings are **immutable**; methods return a new string.

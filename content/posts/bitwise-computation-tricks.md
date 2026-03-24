@@ -45,12 +45,16 @@ low = x & -x   # 0b0001000
 
 ## Clear Lowest Set Bit
 **Key idea**
-- `x & (x - 1)` clears the lowest set bit.
+- `k & (k - 1)` clears the lowest set bit.
 
 ```python
-x = 0b1011000
-x = x & (x - 1)  # 0b1010000
+k = 0b1011000
+k = k & (k - 1)  # 0b1010000
 ```
+
+**Use scenarios**
+- Counting set bits (Kernighan loop).
+- Enumerating set bits or removing one bit at a time.
 
 ---
 
@@ -190,6 +194,21 @@ while sub:
 
 **Pitfall**
 - This loop skips `sub = 0`; handle it separately if needed.
+
+---
+
+## Clear Bits by Mask
+**Key idea**
+- `x & ~mask` clears all bits that are 1 in `mask`.
+
+```python
+# Clear forbidden flags
+x = x & ~mask
+```
+
+**Use scenarios**
+- Disable a set of flags in one operation.
+- Keep only a whitelist: `x &= mask` (opposite effect).
 
 ---
 
