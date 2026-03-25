@@ -72,6 +72,24 @@ print(s.isalnum())    # True (letters + digits)
 
 ---
 
+## list(range(n))
+**Key idea**
+- `range(n)` is lazy; wrap with `list(...)` when you need a concrete list.
+
+**Common pattern**
+- Build index lists or default arrays:
+
+```python
+n = 5
+idx = list(range(n))  # [0, 1, 2, 3, 4]
+zeros = [0] * n
+```
+
+**Pitfall**
+- For large `n`, `list(range(n))` uses O(n) memory.
+
+---
+
 ## Collections (Common Imports)
 **Key idea**
 - Most OA environments (e.g., HackerRank) need **explicit imports**.
