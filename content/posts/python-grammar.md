@@ -156,6 +156,18 @@ from heapq import heappush, heappop
 | `extend(iterable)` / `extendleft(iterable)` | add many |
 | `rotate(k)` | shift positions |
 
+**Heap (heapq)**
+`from heapq import heapify, heappush, heappop, heappushpop, heapreplace, nlargest, nsmallest`
+| Method | Use |
+| --- | --- |
+| `heapify(a)` | in-place heap |
+| `heappush(h, x)` | push to heap |
+| `heappop(h)` | pop min |
+| `heappushpop(h, x)` | push then pop min |
+| `heapreplace(h, x)` | pop min then push |
+| `nlargest(n, it)` | top n largest |
+| `nsmallest(n, it)` | top n smallest |
+
 **Stack (list or deque)**
 | Method | Use |
 | --- | --- |

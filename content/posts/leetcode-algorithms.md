@@ -301,18 +301,10 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 - [1425. Constrained Subsequence Sum](https://leetcode.com/problems/constrained-subsequence-sum/)
 
 ## Reference
-[1]: https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/
-[2]: https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/
-[3]: https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/
-[4]: https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/
-[5]: https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/
-[6]: https://leetcode.com/problems/sliding-window-maximum/
-[7]: https://cp-algorithms.com/num_methods/binary_search.html
-
-1. <a id="ref-1"></a> 灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.
-2. <a id="ref-2"></a> 灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.
-3. <a id="ref-3"></a> 灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.
-4. <a id="ref-4"></a> 灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.
-5. <a id="ref-5"></a> 灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.
-6. <a id="ref-6"></a> LeetCode. (n.d.). Sliding Window Maximum. LeetCode.
-7. <a id="ref-7"></a> CP-Algorithms. (n.d.). Binary Search. CP-Algorithms.
+1. <span id="ref-1"></span> [灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/)
+2. <span id="ref-2"></span> [灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/)
+3. <span id="ref-3"></span> [灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/)
+4. <span id="ref-4"></span> [灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.](https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/)
+5. <span id="ref-5"></span> [灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/)
+6. <span id="ref-6"></span> [LeetCode. (n.d.). Sliding Window Maximum. LeetCode.](https://leetcode.com/problems/sliding-window-maximum/)
+7. <span id="ref-7"></span> [CP-Algorithms. (n.d.). Binary Search. CP-Algorithms.](https://cp-algorithms.com/num_methods/binary_search.html)
