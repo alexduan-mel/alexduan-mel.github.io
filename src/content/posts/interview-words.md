@@ -3,7 +3,8 @@ title: "Interview Words"
 published: 2026-03-16
 draft: false
 description: "Common interview vocabulary with Chinese meanings and English terms."
-tags: ["interview", "vocabulary"]
+tags: ["interview-prep", "terminology", "communication"]
+category: Interview Prep
 ---
 
 ## Common Terms

@@ -3,7 +3,8 @@ title: "Java grammar for OA"
 published: 2026-04-13
 draft: false
 description: "Compact Java syntax and library calls that are easy to misremember under time pressure in online assessments."
-tags: ["java", "oa", "grammar"]
+tags: ["java", "leetcode", "interview-prep"]
+category: Interview Prep
 ---
 
 Short reference for **language mechanics** (types, collections APIs, conversions). It is not an algorithms playbook.

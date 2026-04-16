@@ -3,7 +3,8 @@ title: "Bitwise Computation Tricks"
 published: 2026-03-23
 draft: false
 description: "Quick reference for common bitwise tricks and patterns."
-tags: ["bitwise", "algorithms", "leetcode"]
+tags: ["algorithms", "leetcode", "bit-manipulation"]
+category: Algorithms
 ---
 
 ## Bit Operations (Quick Map)

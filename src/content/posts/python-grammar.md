@@ -3,7 +3,8 @@ title: "Python Grammar"
 published: 2026-03-08
 draft: false
 description: "Concise notes on Python grammar and syntax."
-tags: ["python", "grammar"]
+tags: ["python", "leetcode", "interview-prep"]
+category: Interview Prep
 ---
 
 ## Tuples as Dictionary Keys

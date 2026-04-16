@@ -3,7 +3,8 @@ title: "LeetCode Algorithms"
 published: 2026-03-03
 draft: false
 description: "Concise algorithm walkthroughs inspired by LeetCode problems."
-tags: ["leetcode", "algorithms"]
+tags: ["algorithms", "leetcode", "problem-solving"]
+category: Algorithms
 ---
 
 # Graph

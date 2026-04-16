@@ -2,7 +2,7 @@
 title: "Rate Limiter"
 published: 2026-02-09
 draft: false
-tags: ["system-design", "rate-limiting"]
+tags: ["system-design", "distributed-systems", "rate-limiting"]
 description: "Core ideas, algorithms, and practical considerations for rate limiting."
 category: System Design
 ---
