@@ -1,18 +1,20 @@
 ---
-title: "LeetCode Algorithms"
+
+## title: "LeetCode Algorithms"
 date: 2026-03-03
 draft: false
 summary: "Concise algorithm walkthroughs inspired by LeetCode problems."
 tags: ["leetcode", "algorithms"]
----
 
 # Graph
 
 ## 1. DAG & Cycle Detection
 
 ### 1.1 Topological Sort
+
 Use **indegrees** to repeatedly take nodes with **0 prerequisites**. If you cannot take all nodes, a **cycle** exists. Returns a valid order for a **DAG**.
-Reference: [\[1\]](#ref-1)
+Reference: [[1]](#ref-1)
+
 ```python
 def topologicalSort(n: int, edges: List[List[int]]) -> List[int]:
     g = [[] for _ in range(n)]
@@ -38,8 +40,10 @@ def topologicalSort(n: int, edges: List[List[int]]) -> List[int]:
 ```
 
 ### 1.2 Three-Color DFS
+
 Use colors: **0 = unvisited**, **1 = visiting**, **2 = done**. A **back-edge** to a visiting node means a **cycle**. If no cycle, you can reverse **postorder** for a topo order.
-Reference: [\[1\]](#ref-1)
+Reference: [[1]](#ref-1)
+
 ```python
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -66,12 +70,20 @@ class Solution:
         return True  # No cycle
 ```
 
-### 1.3 Applicable Scenarios
+### 1.3 Dijkstra
+
+### 1.4 Floyd
+
+
+
+### 1.4 Applicable Scenarios
+
 - **Detect cycles** in a directed graph.
 - Need **course scheduling** style feasibility checks.
 - Want **DFS-based** ordering or postorder reasoning.
 
 ### 1.4 Representative Problems
+
 - [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
 - [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
 - [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
@@ -81,8 +93,9 @@ class Solution:
 ## 2. Union-Find
 
 ### 2.1 Template
+
 Use **parent** pointers with **union by size** and **path compression** to maintain dynamic connectivity. Supports fast **find**, **union**, and **connected** checks (near O(1) amortized).
-Reference: [\[2\]](#ref-2)
+Reference: [[2]](#ref-2)
 
 ```python
 class UnionFind:
@@ -124,11 +137,13 @@ class UnionFind:
 ```
 
 ### 2.2 Applicable Scenarios
+
 - **Dynamic connectivity** with repeated unions and queries.
 - Need to track **connected components** in an undirected graph.
 - **Grouping/merging** entities while querying group sizes.
 
 ### 2.3 Representative Problems
+
 - [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
 - [323. Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/)
 - [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
@@ -140,8 +155,9 @@ class UnionFind:
 ## 1. Fixed-Size Window
 
 ### 1.1 Template
+
 Maintain a window of **fixed length k**. Each step: add the right element, update the answer when the window is formed, then remove the left element.  
-Reference: [\[3\]](#ref-3)
+Reference: [[3]](#ref-3)
 
 ```python
 class Solution:
@@ -169,10 +185,12 @@ class Solution:
 ```
 
 ### 1.2 Applicable Scenarios
+
 - **Max/min/count** over all length‑k substrings.
 - **Rolling** statistics with a fixed window size.
 
 ### 1.3 Representative Problems
+
 - [1456. Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)
 - [643. Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/)
 - [438. Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/)
@@ -182,8 +200,9 @@ class Solution:
 ## 2. Variable-Size Window
 
 ### 2.1 Template
+
 Expand the right boundary, and **shrink from the left** while the constraint is violated. Track the best window during the process.  
-Reference: [\[4\]](#ref-4)
+Reference: [[4]](#ref-4)
 
 ```python
 class Solution:
@@ -201,14 +220,17 @@ class Solution:
 ```
 
 ### 2.2 Applicable Scenarios
+
 - **Longest/shortest** subarray or substring under a constraint.
 - **Frequency‑based** constraints (distinct counts, character limits, etc.).
 
 ### 2.3 Exact‑K Trick
+
 For “**exactly k**” constraints, compute `solve(k) - solve(k + 1)` where `solve(x)` counts **at most x**.  
-Reference: [\[5\]](#ref-5)
+Reference: [[5]](#ref-5)
 
 ### 2.4 Representative Problems
+
 - [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 - [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
 - [209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
@@ -218,8 +240,9 @@ Reference: [\[5\]](#ref-5)
 # Binary Search
 
 ## 1. Template (First True / Lower Bound)
+
 Find the **first index** where a **monotonic predicate** becomes true. Use `[lo, hi)` bounds to avoid off‑by‑one errors.  
-Reference: [\[7\]](#ref-7)
+Reference: [[7]](#ref-7)
 
 ```python
 def lower_bound(lo: int, hi: int, ok) -> int:
@@ -234,6 +257,7 @@ def lower_bound(lo: int, hi: int, ok) -> int:
 ```
 
 ## 2. Binary Search on Answer
+
 When the answer is numeric and **feasibility is monotonic**, search the smallest feasible value.
 
 ```python
@@ -249,11 +273,13 @@ def min_feasible(lo: int, hi: int, feasible) -> int:
 ```
 
 ## 3. Applicable Scenarios
+
 - **First/last occurrence** in a sorted array.
 - **Minimum/maximum** feasible value with monotonic constraints.
 - **Rotated** or **partially ordered** arrays (with slight adaptations).
 
 ## 4. Representative Problems
+
 - [704. Binary Search](https://leetcode.com/problems/binary-search/)
 - [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
 - [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
@@ -263,8 +289,9 @@ def min_feasible(lo: int, hi: int, feasible) -> int:
 # Monotonic Queue
 
 ## 1. Template
+
 Maintain a **deque of indices** whose values are **monotonic** (e.g., decreasing for max). Pop from the back to restore order, and pop from the front when indices fall out of the window.  
-Reference: [\[6\]](#ref-6)
+Reference: [[6]](#ref-6)
 
 ```python
 from collections import deque
@@ -289,11 +316,13 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 ```
 
 ## 2. Applicable Scenarios
+
 - **Sliding window max/min** with O(n) total time.
 - **Range max/min** over a moving window.
 - **DP optimization** where transitions use a sliding max/min.
 
 ## 3. Representative Problems
+
 - [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 - [1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/)
 - [862. Shortest Subarray with Sum at Least K](https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/)
@@ -301,10 +330,12 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 - [1425. Constrained Subsequence Sum](https://leetcode.com/problems/constrained-subsequence-sum/)
 
 ## Reference
-1. <span id="ref-1"></span> [灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/)
-2. <span id="ref-2"></span> [灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/)
-3. <span id="ref-3"></span> [灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/)
-4. <span id="ref-4"></span> [灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.](https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/)
-5. <span id="ref-5"></span> [灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/)
-6. <span id="ref-6"></span> [LeetCode. (n.d.). Sliding Window Maximum. LeetCode.](https://leetcode.com/problems/sliding-window-maximum/)
-7. <span id="ref-7"></span> [CP-Algorithms. (n.d.). Binary Search. CP-Algorithms.](https://cp-algorithms.com/num_methods/binary_search.html)
+
+1.  [灵茶山艾府. (2024, March 5). 【算法题单】图论算法（DFS/BFS/拓扑排序/基环树/最短路/最小生成树/网络流）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3581143/fen-xiang-gun-ti-dan-tu-lun-suan-fa-dfsb-qyux/)
+2.  [灵茶山艾府. (2024, April 23). 【算法题单】常用数据结构（前缀和/栈/队列/堆/字典树/并查集/树状数组/线段树）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3583665/fen-xiang-gun-ti-dan-chang-yong-shu-ju-j-bvmv/)
+3.  [灵茶山艾府. (2024, June 13). 教你解决定长滑窗！适用于所有定长滑窗题目！. LeetCode.](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/solutions/2809359/tao-lu-jiao-ni-jie-jue-ding-chang-hua-ch-fzfo/)
+4.  [灵茶山艾府. (2022, November 9). 一个视频讲透滑动窗口！附题单！. LeetCode.](https://leetcode.cn/problems/longest-substring-without-repeating-characters/solutions/1959540/xia-biao-zong-suan-cuo-qing-kan-zhe-by-e-iaks/)
+5.  [灵茶山艾府. (2023, December 17). 【算法题单】滑动窗口与双指针（定长/不定长/单序列/双序列/三指针/分组循环）. LeetCode Discuss.](https://leetcode.cn/discuss/post/3578981/ti-dan-hua-dong-chuang-kou-ding-chang-bu-rzz7/)
+6.  [LeetCode. (n.d.). Sliding Window Maximum. LeetCode.](https://leetcode.com/problems/sliding-window-maximum/)
+7.  [CP-Algorithms. (n.d.). Binary Search. CP-Algorithms.](https://cp-algorithms.com/num_methods/binary_search.html)
+
