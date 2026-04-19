@@ -136,6 +136,192 @@ class UnionFind:
 - [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
 - [765. Couples Holding Hands](https://leetcode.com/problems/couples-holding-hands/)
 
+## 3. Dijkstra Algorithm
+
+Dijkstra is a greedy shortest-path algorithm for **single-source shortest path** in weighted graphs with **non-negative** edge weights. It repeatedly picks the node with the smallest current distance and relaxes outgoing edges.
+
+### 3.1 Template
+Use a **min-heap** to repeatedly expand the node with the smallest known distance, and do **edge relaxation** on outgoing edges. This solves **single-source shortest path** when all edge weights are **non-negative**.  
+Reference: [\[1\]](#ref-1)
+
+```python
+# Return shortest distance from start to every node
+# If node x is unreachable, dis[x] = math.inf
+# Requirement: all edge weights are non-negative
+# Time complexity: O((n + m) log n), where m = len(edges)
+
+def shortestPathDijkstra(n: int, edges: List[List[int]], start: int) -> List[int]:
+    # If nodes are 1-indexed, you can increase n by 1
+    g = [[] for _ in range(n)]  # adjacency list
+
+    for x, y, wt in edges:
+        g[x].append((y, wt))
+        # g[y].append((x, wt))  # uncomment for undirected graph
+
+    dis = [inf] * n
+    dis[start] = 0  # distance from start to itself is 0
+
+    # heap stores (distance from start to node x, node x)
+    h = [(0, start)]
+
+    while h:
+        dis_x, x = heappop(h)
+
+        # If we have already processed a better distance, skip
+        if dis_x > dis[x]:
+            continue
+
+        for y, wt in g[x]:
+            new_dis_y = dis_x + wt
+
+            # Relaxation step
+            if new_dis_y < dis[y]:
+                dis[y] = new_dis_y
+
+                # Lazy update: push new value without removing old ones
+                # Multiple entries for same node may exist in heap
+                # Only the smallest one will be processed
+                heappush(h, (new_dis_y, y))
+
+    return dis
+```
+
+### 3.2 Applicable Scenarios
+- **Single-source shortest path** in weighted graphs.
+- Graph has **no negative edge weights**.
+- Need an efficient shortest-path method for **sparse graphs**.
+
+### 3.3 Representative Problems
+- [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
+- [1514. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/)
+- [1631. Path With Minimum Effort](https://leetcode.com/problems/path-with-minimum-effort/)
+- [1976. Number of Ways to Arrive at Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/)
+- [2642. Design Graph With Shortest Path Calculator](https://leetcode.com/problems/design-graph-with-shortest-path-calculator/)
+
+## 4. Floyd-Warshall Algorithm
+
+Floyd-Warshall is a dynamic programming algorithm for **all-pairs shortest paths**. It treats each node as a possible intermediate node and updates distances with the transition `f[i][j] = min(f[i][j], f[i][k] + f[k][j])`.
+
+### 4.1 Template
+Use **dynamic programming** over an intermediate node `k`: update `f[i][j] = min(f[i][j], f[i][k] + f[k][j])`. This computes **all-pairs shortest paths** and can detect a **negative cycle** if any `f[i][i] < 0` after the transitions.  
+Reference: [\[1\]](#ref-1)
+
+```python
+# Return a 2D matrix where f[i][j] is the shortest distance from i to j
+# If i cannot reach j, then f[i][j] = math.inf
+# Supports negative edge weights
+# If after computation f[i][i] < 0, then a negative cycle exists
+# Nodes are labeled from 0 to n-1
+# Time complexity: O(n^3 + m)
+
+def shortestPathFloyd(n: int, edges: List[List[int]]) -> List[List[int]]:
+    f = [[inf] * n for _ in range(n)]
+
+    # Distance to itself is 0
+    for i in range(n):
+        f[i][i] = 0
+
+    # Initialize edges
+    for x, y, wt in edges:
+        f[x][y] = min(f[x][y], wt)  # handle multiple edges
+        # f[y][x] = min(f[y][x], wt)  # uncomment for undirected graph
+
+    # Core DP
+    for k in range(n):  # intermediate node
+        for i in range(n):
+            if f[i][k] == inf:  # optimization for sparse graphs
+                continue
+            for j in range(n):
+                if f[k][j] == inf:
+                    continue
+                f[i][j] = min(f[i][j], f[i][k] + f[k][j])
+
+    return f
+```
+
+### 4.2 Applicable Scenarios
+- Need **all-pairs shortest paths**.
+- Graph size is relatively small due to **O(n^3)** time.
+- Need to handle **negative edge weights** or detect **negative cycles**.
+
+### 4.3 Representative Problems
+- [1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance](https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/)
+- [1462. Course Schedule IV](https://leetcode.com/problems/course-schedule-iv/)
+- [2976. Minimum Cost to Convert String I](https://leetcode.com/problems/minimum-cost-to-convert-string-i/)
+
+## 5. Minimum Spanning Tree - Kruskal
+
+An MST is a subset of edges that connects all nodes with exactly `n - 1` edges and minimum total weight. Kruskal is a greedy algorithm that sorts edges by weight and keeps adding the lightest valid edge that does not create a cycle.
+
+### 5.1 Template
+Sort edges by weight, then greedily add each edge if it does not create a cycle. Use **Union-Find** to test connectivity and cycle creation efficiently.  
+Reference: [\[1\]](#ref-1)
+
+```python
+class UnionFind:
+    def __init__(self, n: int):
+        # Initially there are n sets: {0}, {1}, ..., {n-1}
+        # Each node is its own parent (representative)
+        self._fa = list(range(n))  # parent array
+        self.cc = n  # number of connected components
+
+    # Find the representative (root) of the set containing x
+    # Path compression is applied to flatten the structure
+    def find(self, x: int) -> int:
+        if self._fa[x] != x:
+            self._fa[x] = self.find(self._fa[x])  # compress path
+        return self._fa[x]
+
+    # Merge the set containing from_ into the set containing to
+    # Return True if merged successfully, False if already in the same set
+    def merge(self, from_: int, to: int) -> bool:
+        x, y = self.find(from_), self.find(to)
+        if x == y:  # already connected, would form a cycle
+            return False
+        self._fa[x] = y  # union
+        self.cc -= 1  # reduce number of connected components
+        return True
+
+
+# Compute the total weight of the Minimum Spanning Tree
+# If the graph is not connected, return math.inf
+# Nodes are labeled from 0 to n-1
+# Time complexity: O(m log m), where m = len(edges)
+
+def mstKruskal(n: int, edges: List[List[int]]) -> int:
+    # Sort edges by weight
+    edges.sort(key=lambda e: e[2])
+
+    uf = UnionFind(n)
+    sum_wt = 0
+    edges_used = 0
+
+    for x, y, wt in edges:
+        # Add edge if it does not form a cycle
+        if uf.merge(x, y):
+            sum_wt += wt
+            edges_used += 1
+            if edges_used == n - 1:
+                break
+
+    # If fewer than n - 1 edges are selected, graph is disconnected
+    if edges_used < n - 1:
+        return inf
+
+    return sum_wt
+```
+
+### 5.2 Applicable Scenarios
+- Need to connect all nodes with **minimum total cost**.
+- Graph is **undirected**.
+- Need an MST approach that is simple and efficient with sorted edges.
+
+### 5.3 Representative Problems
+- [1135. Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/)
+- [1168. Optimize Water Distribution in a Village](https://leetcode.com/problems/optimize-water-distribution-in-a-village/)
+- [1489. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree](https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/)
+- [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
+
 # Sliding Window
 
 ## 1. Fixed-Size Window
