@@ -1,13 +1,13 @@
 ---
 title: "Rate Limiter"
-published: 2026-02-09
+published: 2026-09-23
 draft: false
 tags: ["system-design", "distributed-systems", "rate-limiting"]
 description: "Rate limiter design notes: algorithm trade-offs, atomic Redis operations, shared state, and failure handling."
 category: System Design
 ---
 
-These are my review notes from Chapter 4 of *System Design Interview – An Insider’s Guide* by Alex Xu, with additional Redis implementation clarifications. The parts I found most useful to unpack were atomicity, shared state, and what “centralized Redis” actually means.
+This article summarizes rate limiter design from Chapter 4 of *System Design Interview – An Insider’s Guide* by Alex Xu, with additional Redis implementation clarifications. It covers algorithm trade-offs, atomic decisions, shared state, and failure handling.
 
 A rate limiter controls how frequently a client can perform an action—for example, five login attempts per minute per account or 100 API requests per minute per API key. It helps protect backend capacity, reduce abuse, and control costs. It is one layer of defense; an application limiter alone cannot stop an attack that saturates the network before requests reach it.
 
@@ -21,9 +21,9 @@ A requirement such as “100 requests per minute” is incomplete. First ask:
 - **How strict?** Is temporary overage acceptable? What latency and availability are required?
 - **What happens at the limit?** Reject immediately or queue work? Count all attempts or only admitted requests?
 
-I initially assumed a server-side API limiter without saying so. The interview lesson is to make that assumption explicit. Client-side throttling can reduce unnecessary requests, but authoritative enforcement belongs on infrastructure we control.
+Make the enforcement boundary explicit. Client-side throttling can reduce unnecessary requests, but authoritative enforcement belongs on infrastructure controlled by the service operator.
 
-For these notes, assume multiple gateway instances enforce a shared per-client quota and reject excess requests immediately. Queuing is an alternative discussed under leaky bucket.
+The design below assumes multiple gateway instances enforce a shared per-client quota and reject excess requests immediately. Queuing is an alternative discussed under leaky bucket.
 
 ## 2. Choose an Algorithm by Traffic Shape
 
@@ -89,7 +89,7 @@ If two instances independently allow 100 requests for the same API key, together
 
 ## 4. Atomic Commands and Atomic Decisions
 
-The distinction that initially confused me was that **Redis `INCR` is atomic, but a sequence of application operations is not automatically atomic**.
+**Redis `INCR` is atomic, but a sequence of application operations is not automatically atomic**. A rate-limit decision may require several operations to succeed as one coordinated step.
 
 Suppose the limit is 10 and the counter is 9:
 
@@ -162,12 +162,15 @@ A limiter dependency failure is a different situation from a known quota violati
 
 Use short dependency timeouts so an unavailable limiter does not stall every request. Monitor decision latency, rejection rate by rule, Redis errors, and fallback usage. A rejection spike may indicate abuse, but it may also mean a rule is too restrictive.
 
-## What I Want to Remember
+## Key Takeaways
 
 The design follows a chain of decisions: **define the quota → choose its time semantics → make each decision atomic → coordinate shared state → decide what failures may relax**.
 
-For an interview, I would explain one complete request path and its trade-offs before expanding into clustering. For review notes, the most valuable examples are the ones that expose a misconception: fixed-window boundaries, two requests racing for one remaining slot, and replication lag during failover.
+- **Algorithm choice defines the policy.** Fixed windows, rolling windows, and token buckets enforce different traffic constraints.
+- **Atomicity applies to the complete decision.** A safe counter increment alone does not make a separate check-and-update sequence safe.
+- **Shared quotas require coordinated state.** Independent local counters cannot enforce the same global quota without coordination or quota allocation.
+- **Availability and strictness involve trade-offs.** Replication lag, failover, and fallback behavior can affect how closely the system enforces a limit.
 
 *Primary reference: Alex Xu, System Design Interview – An Insider’s Guide, Chapter 4. The Redis and HTTP links above support the additional implementation notes.*
 
-*Authorship note: These notes reflect my review of the chapter and were consolidated and refined with AI assistance.*
+*Authorship note: This article was consolidated and refined with AI assistance.*
