@@ -1,5 +1,6 @@
 ---
 title: "Rate Limiter"
+slug: "rate-limiter"
 published: 2026-09-23
 draft: false
 tags: ["system-design", "distributed-systems", "rate-limiting"]

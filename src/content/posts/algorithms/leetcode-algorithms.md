@@ -1,5 +1,6 @@
 ---
 title: "LeetCode Algorithms"
+slug: "leetcode-algorithms"
 published: 2026-03-03
 draft: false
 description: "Concise algorithm walkthroughs inspired by LeetCode problems."

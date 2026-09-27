@@ -1,5 +1,6 @@
 ---
 title: "Stanford CS224N Notes"
+slug: "stanford-cs224n-notes"
 published: 2026-03-05
 draft: false
 description: "Notes and takeaways from Stanford CS224N."

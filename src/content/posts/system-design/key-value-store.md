@@ -1,5 +1,6 @@
 ---
 title: "Key-Value Store"
+slug: "key-value-store"
 published: 2026-09-23
 draft: false
 tags: ["system-design", "distributed-systems", "databases"]

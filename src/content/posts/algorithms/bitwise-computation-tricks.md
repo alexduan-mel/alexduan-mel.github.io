@@ -1,5 +1,6 @@
 ---
 title: "Bitwise Computation Tricks"
+slug: "bitwise-computation-tricks"
 published: 2026-03-23
 draft: false
 description: "Quick reference for common bitwise tricks and patterns."

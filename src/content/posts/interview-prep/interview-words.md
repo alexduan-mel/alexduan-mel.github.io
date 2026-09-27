@@ -1,5 +1,6 @@
 ---
 title: "Interview Words"
+slug: "interview-words"
 published: 2026-03-16
 draft: false
 description: "Common interview vocabulary with Chinese meanings and English terms."

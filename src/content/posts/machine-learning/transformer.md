@@ -1,5 +1,6 @@
 ---
 title: "Transformer"
+slug: "transformer"
 published: 2026-09-21
 draft: true
 ---

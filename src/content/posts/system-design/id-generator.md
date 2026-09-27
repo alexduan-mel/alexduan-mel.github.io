@@ -1,5 +1,6 @@
 ---
 title: "Unique ID Generator"
+slug: "id-generator"
 published: 2026-09-24
 draft: false
 tags: ["system-design", "distributed-systems"]

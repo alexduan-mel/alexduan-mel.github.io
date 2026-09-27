@@ -1,5 +1,6 @@
 ---
 title: "Java grammar for OA"
+slug: "java-leetcode"
 published: 2026-04-13
 draft: false
 description: "Compact Java syntax and library calls that are easy to misremember under time pressure in online assessments."

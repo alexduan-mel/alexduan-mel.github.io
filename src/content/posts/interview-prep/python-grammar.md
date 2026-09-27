@@ -1,5 +1,6 @@
 ---
 title: "Python Grammar"
+slug: "python-grammar"
 published: 2026-03-08
 draft: false
 description: "Concise notes on Python grammar and syntax."

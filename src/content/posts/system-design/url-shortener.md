@@ -1,5 +1,6 @@
 ---
 title: "URL Shortener"
+slug: "url-shortener"
 published: 2026-09-25
 draft: false
 tags: ["system-design", "distributed-systems", "url-shortening"]
