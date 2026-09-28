@@ -25,28 +25,33 @@ The peak multiplier is an assumption. Storage is raw, before compression, dedupl
 
 ## The Crawl Loop
 
-```text
-Seed URLs
-    │
-    ▼
-URL frontier ◄───────────────────────────────┐
-    │ select an eligible URL                │
-    ▼                                       │
-Check robots rules → DNS lookup → Download   │
-    │                                       │
-    ▼                                       │
-Parse and validate HTML                      │
-    │                                       │
-    ▼                                       │
-Content seen? ── yes → Skip duplicate        │
-    │ no                                    │
-    ▼                                       │
-Store content → Extract links               │
-    │                                       │
-    ▼                                       │
-Resolve URLs → Filter → URL already seen?    │
-                            │ no            │
-                            └───────────────┘
+**Fetch and store:** seed URLs initialize the frontier. Select an eligible URL, check robots rules, then download and validate its HTML before checking for duplicate content.
+
+```mermaid
+flowchart TD
+    accTitle: Fetch and store web pages
+    accDescr: Seed URLs enter the frontier. An eligible URL is selected and checked against robots rules. Allowed pages are downloaded and parsed. New content is stored; disallowed URLs and duplicate content are skipped.
+    frontier[URL frontier] --> select[Select eligible URL]
+    select --> robots{Robots allowed?}
+    robots -- Yes --> download[DNS + Download]
+    robots -- No --> drop[Skip URL]
+    download --> parse[Parse HTML]
+    parse --> content{Content seen?}
+    content -- No --> store[Store content]
+    content -- Yes --> duplicate[Skip duplicate]
+```
+
+**Discover URLs:** extract links from the newly stored content and enqueue unseen URLs. The frontier below is the same queue used above; this completes the crawl loop.
+
+```mermaid
+flowchart TD
+    accTitle: Discover and enqueue URLs
+    accDescr: Links from newly stored content are extracted, resolved, and filtered. Seen URLs are skipped. Unseen URLs are enqueued in the same frontier used by the fetch workflow.
+    links[Extract links] --> filter[Resolve + Filter]
+    filter --> seen{URL seen?}
+    seen -- No --> enqueue[Enqueue]
+    seen -- Yes --> skip[Skip URL]
+    enqueue --> frontier[URL frontier]
 ```
 
 Repeated URLs are skipped during discovery; scheduled recrawls are handled separately. Download failures enter a retry policy, not the successful parsing path. Keep downloader, parser, and storage responsibilities separate so new content handlers can be added independently.
