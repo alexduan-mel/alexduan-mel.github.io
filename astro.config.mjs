@@ -10,6 +10,8 @@ import { defineConfig } from "astro/config";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeComponents from "rehype-components"; /* Render the custom directive content */
 import rehypeKatex from "rehype-katex";
+import rehypeMermaid from "rehype-mermaid";
+import { mermaidConfig } from "./src/plugins/mermaid-theme.mjs";
 import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkGithubAdmonitionsToDirectives from "remark-github-admonitions-to-directives";
@@ -22,6 +24,7 @@ import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import { remarkMermaid } from "./src/plugins/remark-mermaid.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 
 // https://astro.build/config
@@ -107,12 +110,17 @@ export default defineConfig({
 			remarkMath,
 			remarkReadingTime,
 			remarkExcerpt,
+			remarkMermaid,
 			remarkGithubAdmonitionsToDirectives,
 			remarkDirective,
 			remarkSectionize,
 			parseDirectiveNode,
 		],
 		rehypePlugins: [
+			[rehypeMermaid, {
+				strategy: "inline-svg",
+				mermaidConfig,
+			}],
 			rehypeKatex,
 			rehypeSlug,
 			[

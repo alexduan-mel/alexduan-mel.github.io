@@ -1,4 +1,20 @@
 .custom-md {
+    /* Keep build-time SVG colors readable in both site themes. */
+    .mermaid-diagram {
+        margin-block: 1.5rem;
+        padding: 1rem;
+        overflow-x: auto;
+        border-radius: 0.75rem;
+        background: #fff;
+        color: #222;
+
+        svg {
+            display: block;
+            margin-inline: auto;
+            height: auto;
+        }
+    }
+
     h1 {
         @apply text-3xl;
     }
