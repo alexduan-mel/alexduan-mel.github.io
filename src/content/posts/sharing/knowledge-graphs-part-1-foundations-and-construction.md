@@ -138,7 +138,7 @@ Employment_123 指这一次具体任职。图中的三条箭头分别表达：�
 
 这里还要分清三个层面：KG 是我们组织起来的知识；RDF 与 property graph 是表达数据的模型；**graph database**（图数据库）是保存和查询数据的软件。开场的节点箭头图则是这些知识的可视化。
 
-### 2.4 让关系能够被检查
+<!-- ### 2.4 让关系能够被检查
 
 听到“AMD 与 NVIDIA 竞争”，我们自然会问：在哪个市场？谁提供了这个说法？对应什么时间？
 
@@ -146,7 +146,40 @@ Employment_123 指这一次具体任职。图中的三条箭头分别表达：�
 
 我们也需要约定关系的含义。例如，manufacturesWafersFor 指晶圆代工，不能混用为整机销售。这类关于实体类型、关系和属性的约定称为 **schema**（模式）。先保持这些约定一致，图里的关系才容易组合和核验。[^5]
 
-可选的小讨论：如果所有边都改叫 relatedTo，我们还能回答什么？哪些问题会失去所需的信息？
+可选的小讨论：如果所有边都改叫 relatedTo，我们还能回答什么？哪些问题会失去所需的信息？ -->
+### 2.4 只有节点和边还不够
+
+到这里，我们已经可以用 entity 和 relation 画出一张图。但如果这张图真的要被查询、组合和维护，只有“谁和谁相连”还不够。
+
+例如：
+
+> AMD → competesWith → NVIDIA
+
+我们还会自然地追问：
+
+- **这条 relation 到底表示什么？** 是在哪个市场竞争？
+- **它在什么条件或时间范围内成立？**
+- **这条信息来自哪里？**
+
+因此，一条可用的 KG relation 往往还需要三类信息：
+
+- **Semantics / Schema（语义与模式）**：约定 relation 的含义。例如 `manufacturesWafersFor` 表示晶圆代工，不能和整机销售混为一谈。
+- **Qualifier（限定条件）**：补充关系成立的范围，例如“在独立显卡市场”。
+- **Provenance（来源）**：记录这条关系由哪份资料支持，例如对应的年报或公告。[^5]
+
+可以把它简单理解为：
+
+```text
+AMD ──competesWith──> NVIDIA
+      market = discrete graphics
+      source = AMD annual report
+```
+
+这些信息让图里的关系不只是“有一条边”，而是具有比较明确的含义、上下文和证据。
+
+> **A useful Knowledge Graph needs more than nodes and edges. It also needs semantics, context, and evidence.**
+
+后面讨论 KG construction、LLM 抽取和 explicit knowledge 时，我们还会再次遇到这些问题。
 
 ## 3. 传统构建：从资料到图
 
