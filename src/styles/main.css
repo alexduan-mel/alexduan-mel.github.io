@@ -1,5 +1,27 @@
 @tailwind components;
 
+/* Scope wide reading to the current article so Swup navigation restores the layout. */
+@media (min-width: 1024px) {
+    html:has(reading-mode-toggle[expanded]) {
+        #main-panel {
+            max-width: none;
+        }
+        #main-grid {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        #sidebar, #toc-wrapper {
+            display: none;
+        }
+        .back-to-top-btn {
+            right: 1.5rem;
+            transform: none;
+        }
+        .back-to-top-btn.hide, .back-to-top-btn:active {
+            transform: scale(0.9);
+        }
+    }
+}
+
 @layer components {
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;

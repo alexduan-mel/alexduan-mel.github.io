@@ -1,0 +1,67 @@
+---
+import { Icon } from "astro-icon/components";
+import { siteConfig } from "../../config";
+
+interface Props {
+	lang?: string;
+}
+
+const chinese = (Astro.props.lang || siteConfig.lang).startsWith("zh");
+const expandLabel = chinese ? "展开阅读" : "Expand reading";
+const restoreLabel = chinese ? "恢复布局" : "Restore layout";
+---
+
+<reading-mode-toggle class="hidden lg:block ml-auto">
+    <button type="button" aria-pressed="false" aria-controls="main-grid"
+        class="btn-plain rounded-lg px-3 py-1 gap-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]">
+        <span data-expand class="flex items-center gap-2">
+            <Icon name="material-symbols:open-in-full-rounded" class="text-lg" />
+            {expandLabel}
+        </span>
+        <span data-restore class="flex items-center gap-2" hidden>
+            <Icon name="material-symbols:close-fullscreen-rounded" class="text-lg" />
+            {restoreLabel}
+        </span>
+    </button>
+</reading-mode-toggle>
+
+<script>
+    class ReadingModeToggle extends HTMLElement {
+        connectedCallback() {
+            this.querySelector("button")?.addEventListener("click", this.toggle);
+            document.addEventListener("keydown", this.onKeyDown);
+        }
+
+        disconnectedCallback() {
+            this.querySelector("button")?.removeEventListener("click", this.toggle);
+            document.removeEventListener("keydown", this.onKeyDown);
+        }
+
+        toggle = () => this.setExpanded(!this.hasAttribute("expanded"));
+
+        onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape" && this.hasAttribute("expanded")) {
+                this.setExpanded(false);
+            }
+        };
+
+        setExpanded(expanded: boolean) {
+            this.toggleAttribute("expanded", expanded);
+            this.querySelector("button")?.setAttribute("aria-pressed", String(expanded));
+            const expand = this.querySelector<HTMLElement>("[data-expand]");
+            const restore = this.querySelector<HTMLElement>("[data-restore]");
+            if (expand) expand.hidden = expanded;
+            if (restore) restore.hidden = !expanded;
+        }
+    }
+
+    if (!customElements.get("reading-mode-toggle")) {
+        customElements.define("reading-mode-toggle", ReadingModeToggle);
+    }
+</script>
+
+<style>
+    [hidden] {
+        display: none;
+    }
+</style>
