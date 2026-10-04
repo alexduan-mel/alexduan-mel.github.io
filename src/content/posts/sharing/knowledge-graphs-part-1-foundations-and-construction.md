@@ -1,3 +1,13 @@
+---
+title: "Knowledge Graphs：从知识表示到大语言模型（第一讲：基础、构建与变化）"
+published: 2026-10-04
+draft: false
+description: "知识图谱分享第一讲：实体与关系、知识表示、传统构建与查询，以及大语言模型如何辅助构图。"
+tags: ["knowledge-graphs", "large-language-models"]
+category: Sharing
+lang: zh-CN
+---
+
 # Knowledge Graphs：从知识表示到大语言模型
 ## 第一讲：基础、构建与变化
 
