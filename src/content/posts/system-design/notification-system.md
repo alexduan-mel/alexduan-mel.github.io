@@ -33,23 +33,30 @@ Total                              ≈ 185/second average
 
 Average traffic is not enough for capacity planning. A product launch or breaking event can create a much larger burst; a 10× planning assumption would be about 1,850 notifications/second before retries. If each retained notification record averages 1 KB, 16 million records add about 16 GB/day or 5.8 TB/year before indexes and replicas. State the assumptions rather than presenting them as measured facts.
 
+## Channels and Endpoints
+
+| Channel | Destination and delivery concerns |
+| --- | --- |
+| Mobile push | An app registration addressed through APNs or FCM. Keep payloads small, avoid sensitive lock-screen content, and set priority and expiry deliberately. |
+| SMS | A normalized phone number. Account for provider/sender limits, cost, delivery status, and opt-out signals. |
+| Email | An email address. Render subject, HTML, and plain text; process bounces and complaints; consider separating transactional and bulk traffic for reputation isolation. |
+
+Registrations can change, and one user may have several devices. Obtain current APNs tokens from the app and associate them with the correct account; see [Apple's registration guidance](https://developer.apple.com/documentation/usernotifications/registering-your-app-with-apns). Maintain registration timestamps and remove stale or invalid endpoints as described in [FCM's registration guidance](https://firebase.google.com/docs/cloud-messaging/manage-tokens).
+
 ## High-Level Design
 
-The synchronous API should do only the work needed to validate and durably accept a request. Delivery happens asynchronously so a slow SMS or push provider does not hold open the caller's request.
+The API validates the request and commits the logical notification and an outbox row in one transaction. Only then does it return `202 Accepted` with a notification ID. Eligibility checks and delivery continue asynchronously; acceptance does not promise that every requested channel will be used.
 
 ```mermaid
 flowchart TD
     accTitle: Multi-channel notification delivery
-    accDescr: Product services submit a notification. Eligible requests are resolved, rendered, stored, and routed to a channel queue. A delivery worker sends each message through an external provider to the user's endpoint.
-    source([Product services]) --> api[Notification API]
-    api --> eligible{Request eligible?}
-
-    eligible -- No --> suppress[Reject or suppress]
-    eligible -- Yes --> resolve[Resolve endpoint + preferences]
-    resolve --> render[Render channel template]
-    render --> record[(Notification store)]
-    record --> route[Route by channel]
-    route --> queue[(Channel queue)]
+    accDescr: The API validates a request and atomically saves the notification and outbox row before returning acceptance. An asynchronous dispatcher starts planning, which resolves eligible endpoints and renders channel jobs. Workers deliver those jobs through providers.
+    source([Product services]) --> api[Validate + deduplicate]
+    api --> record[(Notification + outbox)]
+    record --> accepted[Return 202 Accepted]
+    record --> dispatch[Outbox dispatcher]
+    dispatch --> planner[Resolve + filter + render]
+    planner --> queue[(Channel queues)]
     queue --> worker[Delivery worker]
     worker --> provider[External provider]
     provider --> endpoint([User endpoint])
@@ -69,16 +76,16 @@ Cache frequently read endpoints, preferences, and templates, but keep their data
 
 ### Trace One Request
 
-1. A product service sends an authenticated request with an idempotency key, notification type, recipient, template data, desired channels, priority, and optional schedule or expiry.
-2. The notification API authorizes the caller, validates the schema, deduplicates repeated submissions, applies coarse source limits, and writes the logical notification durably.
-3. The planner resolves current endpoints and fine-grained user preferences. It creates one channel job per eligible destination and renders the appropriate template and locale.
-4. The router publishes jobs to separate push, SMS, and email queues. Workers can now scale and fail independently by channel.
+1. A product service supplies an idempotency key, notification type, recipient, template data, channels, priority, and optional schedule or expiry.
+2. The API authenticates and authorizes the caller, validates the request, applies source limits, and commits the notification and outbox row before returning acceptance.
+3. The dispatcher triggers a resumable planner. It resolves current endpoints and preferences, then persists one rendered job per eligible channel and destination, with an outbox entry for publication. If none are eligible, it records suppression.
+4. The job dispatcher publishes to separate push, SMS, and email queues. Repeated planning or publication reuses stable job IDs so it does not create extra logical deliveries.
 5. A worker claims a job, performs the final expiry and suppression checks, calls the provider, records the attempt, and either completes, retries, or quarantines the job.
 6. Provider callbacks update delivery, bounce, complaint, or invalid-endpoint state where the channel supplies that feedback.
 
-For a scheduled notification, persist the due time first. A scheduler scans or indexes due records and releases them to the normal channel queues. This prevents a short queue-retention period or process restart from losing work scheduled far in the future.
+For scheduled notifications, persist the due time and release the request to planning when it becomes due. Resolve current preferences and endpoints then, rather than freezing them months in advance.
 
-There is also a dual-write failure window between the notification database and the broker. If the API commits a record and crashes before publishing its job, the request appears accepted but never reaches a worker. One solution is a **transactional outbox**: save the notification and an outbox row in the same database transaction, then let a resumable dispatcher publish the outbox row and mark it sent. Publishing may still happen more than once, so consumers remain idempotent. Alternatively, make the broker the durable acceptance boundary and return success only after it acknowledges the job; be explicit about which system owns recovery.
+The **transactional outbox** closes the database–broker dual-write gap: a crash after commit leaves durable work for the dispatcher to resume. Mark an outbox entry published only after broker acknowledgment. A crash between publication and that update can cause redelivery, so consumers still need idempotency.
 
 ## Queues Decouple Work; They Do Not Guarantee Delivery
 
@@ -103,7 +110,7 @@ There are two different duplicate risks:
 | Repeated API submission | The caller times out and resends the same event. | Require an idempotency key or stable source-event ID and enforce a uniqueness constraint. |
 | Repeated worker delivery | A worker sends successfully, crashes before acknowledging the queue, and receives the job again. | Record attempts by logical notification and make local side effects idempotent. |
 
-The deduplication key needs the correct scope. A useful logical key might be `(source, event_id, recipient, notification_type)`. Using only `event_id` could incorrectly collapse notifications for different recipients; using a newly generated UUID on every retry prevents deduplication entirely. Retain keys at least as long as callers and queues may retry.
+Use `(source, event_id, recipient, notification_type)` to identify the logical request, and a separate stable job ID for each channel and destination. This prevents a successful email from suppressing a requested push. Retries reuse those IDs; retain deduplication records for the supported retry and replay window.
 
 Exactly-once end-user delivery is generally not achievable across an external provider boundary. Consider this sequence:
 
@@ -124,7 +131,7 @@ Classify provider outcomes instead of retrying every failure:
 | Outcome | Examples | Response |
 | --- | --- | --- |
 | Accepted | Provider returns success or a message ID | Record provider acceptance; do not call this device delivery. |
-| Transient | Timeout, connection failure, provider `429`, provider `5xx` | Retry with exponential backoff, jitter, and a channel-specific attempt limit. |
+| Transient | Timeout, connection failure, provider `429`, provider `5xx` | Respect provider retry delays; use backoff, jitter, expiry, and an attempt limit. |
 | Permanent request failure | Invalid payload, unsupported sender, authentication/configuration error | Stop automatic retries, alert when appropriate, and send to a dead-letter queue for diagnosis. |
 | Invalid endpoint | Unregistered device token, hard email bounce, invalid phone number | Disable or remove that endpoint and stop sending to it. |
 | Expired | An event reminder arrives after the event or exceeds its TTL | Discard it rather than deliver stale information. |
@@ -132,19 +139,20 @@ Classify provider outcomes instead of retrying every failure:
 ```mermaid
 flowchart TD
     accTitle: Provider result and retry workflow
-    accDescr: A send attempt is classified as accepted, permanent failure, or retryable. Retryable work waits with backoff and returns to the queue only while the notification remains valid.
+    accDescr: A send result is classified as accepted, permanent failure, or retryable. A retry time is calculated using provider constraints and backoff. Only jobs with attempts remaining and a retry time before expiry enter the delayed retry queue.
     attempt[Send attempt] --> outcome{Outcome?}
 
     outcome -- Accepted --> accepted[Record provider acceptance]
     outcome -- Permanent --> failed[Disable endpoint or quarantine]
-    outcome -- Retryable --> backoff[Backoff + jitter]
-    backoff --> valid{Still valid?}
-    valid -- No --> discard[Discard stale notification]
-    valid -- Yes --> retry[(Retry queue)]
-    retry --> attempt
+    outcome -- Retryable --> schedule[Calculate next attempt time]
+    schedule --> allowed{Retry allowed?}
+    allowed -- No --> stop[Expire or send to DLQ]
+    allowed -- Yes --> retry[(Delayed retry queue)]
 ```
 
-Make the retry budget explicit by notification type. A one-time password may warrant a short, aggressive policy and a brief expiry; a weekly digest can tolerate more delay. Add jitter so many failed jobs do not retry simultaneously when a provider recovers. A dead-letter queue isolates repeatedly failing jobs for investigation and controlled replay; it is not a place to forget them. [AWS's dead-letter queue guidance](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html) recommends allowing enough receives for transient recovery and monitoring the queue.
+Calculate the next attempt using exponential backoff with jitter, but never earlier than the provider permits. [FCM's error guidance](https://firebase.google.com/docs/cloud-messaging/error-codes) requires honoring `Retry-After` for unavailable responses and a minimum one-minute initial delay for overall-message-rate or topic-rate quota failures. An urgent one-time password does not override these constraints: if the next permitted attempt is at or beyond expiry, discard the job.
+
+The delayed queue releases eligible jobs back to the send worker. Check expiry again before sending. Exhausted attempts go to a monitored dead-letter queue (DLQ); expired jobs receive a terminal expired status. A DLQ supports diagnosis and controlled replay, as described in [AWS's guidance](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html). Acknowledge the current queue message only after its outcome or retry handoff is durable.
 
 ## Provider Acceptance Is Not User Delivery
 
@@ -167,9 +175,7 @@ Keep product metrics separate:
 
 An end-to-end notification ID should appear in records, queue jobs, structured logs, and provider metadata or callbacks. Do not put message bodies, tokens, phone numbers, or email addresses into unrestricted logs.
 
-## Endpoints, Preferences, and Notification Fatigue
-
-Mobile registrations are not permanent user identifiers. APNs tokens identify an app-device combination, and Apple advises apps to obtain the current token and forward it to the provider server rather than assume a cached token remains valid. A user can also have multiple devices. See [Apple's token registration guidance](https://developer.apple.com/documentation/usernotifications/registering-your-app-with-apns). FCM similarly recommends timestamping registrations and removing stale or invalid ones in its [token management guidance](https://firebase.google.com/docs/cloud-messaging/manage-tokens).
+## Preferences and Notification Fatigue
 
 Model preferences at the granularity the product promises:
 
@@ -184,15 +190,9 @@ Check preferences before enqueueing to save work, then consider a final suppress
 
 For fan-out campaigns, do not expand millions of recipients inside one API request or place the entire audience in one queue message. Persist a campaign, have partitioned fan-out workers enumerate recipients in bounded batches, apply preferences to each recipient, and pace delivery. This makes progress resumable and avoids one oversized job becoming a failure hotspot.
 
-## Channel-Specific Notes
+## Provider Integration and Security
 
-| Channel | Design notes |
-| --- | --- |
-| Mobile push | Send through APNs or FCM using current app registrations. Keep payloads small, avoid sensitive content on the lock screen, set priority and TTL deliberately, and process invalid-registration feedback. |
-| SMS | Use one or more providers behind an adapter. Normalize phone numbers, pace by provider/sender limits, control cost, and process delivery status and opt-out signals. |
-| Email | Render subject, HTML, and plain text; use a reputable provider; process bounces and complaints; and separate transactional from bulk traffic when reputation isolation matters. |
-
-Provider adapters should translate a stable internal job into each vendor's request and map vendor-specific responses into common categories such as accepted, retryable, invalid endpoint, and permanent failure. This keeps the core workflow independent of one vendor without pretending the channels have identical behavior.
+Provider adapters translate internal jobs into vendor requests and map responses into the outcome categories above. Keep channel-specific behavior, such as retry delays and endpoint invalidation, explicit in each adapter.
 
 Treat recipient endpoints and provider credentials as sensitive data. Encrypt data in transit and at rest, restrict service access, keep provider credentials in managed secret storage, and rotate them. Escape untrusted template variables for their output context, and authenticate provider callbacks before applying status or endpoint changes; callback handling should itself be idempotent.
 
